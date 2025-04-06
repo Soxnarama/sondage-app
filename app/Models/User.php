@@ -2,47 +2,48 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // Le nom de la clé primaire si elle n'est pas 'id'
+    protected $primaryKey = 'id_user';
+
+    // Spécifie si la clé primaire est auto-incrémentée
+    public $incrementing = true;
+
+    // Type de la clé primaire
+    protected $keyType = 'int';
+
+    // Les attributs qui peuvent être assignés en masse
     protected $fillable = [
-        'name',
-        'email',
+        'last_name',
+        'first_name',
+        'username',
+        'mail',
         'password',
+        'domaine',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    // Les attributs à masquer dans les tableaux (ex : quand on fait un return JSON)
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Les attributs castés automatiquement
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
+
+    // Par défaut, Laravel utilise 'email', mais ici tu utilises 'mail'
+    public function getAuthIdentifierName()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return 'mail';
     }
 }
