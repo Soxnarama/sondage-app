@@ -1,56 +1,46 @@
 @extends('layouts.index')
 
+@section('title', 'Créer un sondage')
+
 @section('content')
-    <div class="max-w-6xl mx-auto p-8 bg-white rounded-lg shadow-lg space-y-8">
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-3xl font-semibold text-indigo-600">Tableau de Bord - Gestion des Sondages</h2>
-            <a href="{{ route('sondages.create') }}" class="bg-indigo-600 text-white py-3 px-6 rounded-md hover:bg-indigo-700 transition">Créer un Sondage</a>
-        </div>
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-bold text-gray-900 mb-8">Créer un nouveau sondage</h1>
 
-        <!--  Message de bienvenue-->
-        @if (Auth::check())
-            <div class="p-4 bg-indigo-100 text-indigo-700 rounded-lg mb-6">
-                <p>Bienvenue, {{ Auth::user()->first_name }}! Vous êtes prêt à créer vos sondages.</p>
+    <form action="{{ route('sondages.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
+        <div class="bg-white shadow-sm rounded-lg p-6">
+            <!-- Titre du sondage -->
+            <div class="mb-6">
+                <label for="titre_sondage" class="block text-sm font-medium text-gray-700">Titre du sondage</label>
+                <input type="text" name="titre_sondage" id="titre_sondage" required
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                @error('titre_sondage')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
-        @else
-            <div class="p-4 bg-gray-100 text-gray-700 rounded-lg mb-6">
-                <p>Vous n'êtes pas connecté. <a href="{{ route('login') }}" class="text-indigo-600">Se connecter</a></p>
+
+            <!-- Logo (optionnel) -->
+            <div class="mb-6">
+                <label for="logo" class="block text-sm font-medium text-gray-700">Logo (optionnel)</label>
+                <input type="file" name="logo" id="logo" accept="image/*"
+                    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
             </div>
-        @endif
 
-        <!-- Liste des sondages -->
-        <div class="bg-gray-50 p-6 rounded-lg shadow-md">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Sondages Créés</h3>
-            
-            <!-- Vérifier s'il y a des sondages -->
-          
-
-        </div>
-
-        <!-- Statistiques de sondage -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Statistiques Récentes</h3>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="text-lg text-gray-600">Nombre total de sondages</div>
-                    <div class="text-xl font-semibold text-indigo-600">0</div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="text-lg text-gray-600">Sondages publiés</div>
-                    <div class="text-xl font-semibold text-indigo-600">0</div>
-                </div>
+            <!-- Statut -->
+            <div class="mb-6">
+                <label for="statut" class="block text-sm font-medium text-gray-700">Statut</label>
+                <select name="statut" id="statut" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    <option value="brouillon">Brouillon</option>
+                    <option value="publié">Publié</option>
+                </select>
             </div>
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-xl font-semibold text-gray-800 mb-4">Progrès de Participation</h3>
-                <div class="h-1.5 bg-indigo-200 mb-4">
-                    <div class="h-full bg-indigo-600" style="width: 0%"></div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div class="text-lg text-gray-600">Participation en cours</div>
-                    <div class="text-xl font-semibold text-indigo-600">0%</div>
-                </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Continuer vers les questions
+                </button>
             </div>
         </div>
-    </div>
+    </form>
+</div>
 @endsection

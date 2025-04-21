@@ -6,6 +6,7 @@ use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
@@ -27,7 +28,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'login' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -41,14 +42,27 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+        Log::info('Tentative d\'authentification avec:', [
+            'login' => $this->login,
+            'using_mail' => true
+        ]);
 
-            throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
-            ]);
+        // Tenter l'authentification avec le mail
+        if (!Auth::attempt(['mail' => $this->login, 'password' => $this->password], $this->boolean('remember'))) {
+            Log::info('Échec authentification par mail, tentative avec username');
+
+            // Si l'authentification par mail échoue, essayer avec le nom d'utilisateur
+            if (!Auth::attempt(['username' => $this->login, 'password' => $this->password], $this->boolean('remember'))) {
+                Log::error('Échec authentification par username');
+                RateLimiter::hit($this->throttleKey());
+
+                throw ValidationException::withMessages([
+                    'login' => trans('auth.failed'),
+                ]);
+            }
         }
 
+        Log::info('Authentification réussie pour:', ['user' => Auth::user()->mail ?? Auth::user()->username]);
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -59,7 +73,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -68,7 +82,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'login' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -80,6 +94,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+        return Str::transliterate(Str::lower($this->input('login')).'|'.$this->ip());
     }
 }

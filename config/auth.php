@@ -62,7 +62,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\User::class,
         ],
 
         // 'users' => [
@@ -111,5 +111,9 @@ return [
     */
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
+
+    // Ajout des configurations personnalisées
+    'username_field' => 'mail', // Le champ à utiliser pour l'authentification par défaut
+    'id_field' => 'id_user', // Le nom personnalisé de l'ID
 
 ];

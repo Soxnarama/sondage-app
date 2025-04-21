@@ -14,7 +14,7 @@
                 Recueillez des avis, analysez les résultats et prenez des décisions éclairées avec SunuSondage.
             </p>
             <div class="space-x-4 animate__animated animate__fadeInUp animate__delay-1s">
-                <a href="" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-indigo-700 transition">
+                <a href="{{ route('sondages.create') }}" class="bg-indigo-600 text-white font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-indigo-700 transition">
                     Créer un sondage
                 </a>
             </div>
@@ -97,9 +97,6 @@
     <section class="py-16 bg-indigo-600 text-white text-center">
         <h2 class="text-4xl font-bold mb-6">Prêt à lancer votre premier sondage ?</h2>
         <p class="text-xl mb-6">Rejoignez-nous et commencez à récolter des opinions immédiatement.</p>
-        <a href="" class="bg-white text-indigo-700 px-8 py-4 rounded-full font-semibold hover:bg-gray-200 transition">
-            Créez un compte gratuit
-        </a>
     </section>
 
     

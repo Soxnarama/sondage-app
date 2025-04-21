@@ -26,8 +26,8 @@
             @csrf
         
             <div>
-                <label for="username" class="block font-medium text-gray-700 mb-1">Nom d'utilisateur</label>
-                <input type="text" name="username" id="username" value="{{ old('username') }}"
+                <label for="login" class="block font-medium text-gray-700 mb-1">Email ou nom d'utilisateur</label>
+                <input type="text" name="login" id="login" value="{{ old('login') }}"
                     class="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     required>
             </div>
@@ -44,7 +44,7 @@
                 Se connecter
             </button>
 
-            @error('username')
+            @error('login')
                 <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
             @enderror
         </form>

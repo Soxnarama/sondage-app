@@ -1,4 +1,4 @@
--- Création de la base de données
+ -- Création de la base de données
 CREATE DATABASE sondage;
 USE sondage;
 
